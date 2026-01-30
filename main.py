@@ -1,10 +1,19 @@
+name: Android Build
+on:
+  push:
+  workflow_dispatch:
 
-from kivy.app import App
-from kivy.uix.label import Label
-
-class MyApp(App):
-    def build(self):
-        return Label(text='Hello from GitHub Build')
-
-if __name__ == '__main__':
-    MyApp().run()
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build with Buildozer
+        uses: ArtemSerebriakov/buildozer-action@v1.6.1
+        with:
+          command: buildozer android debug
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: My-App
+          path: bin/*.apk
